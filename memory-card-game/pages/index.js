@@ -80,7 +80,7 @@ export default function Home() {
 
   const saveScore = async () => {
     try {
-      await fetch("https://memory-game-backend-4.onrender.com/scores)", {
+      await fetch("https://memory-game-backend-4.onrender.com)", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name || "Player", moves, time, difficulty: "Fixed", category: "Sports" })

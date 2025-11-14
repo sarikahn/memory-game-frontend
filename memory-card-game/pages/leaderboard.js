@@ -4,7 +4,7 @@ export default function Leaderboard() {
   const [scores, setScores] = useState([]);
 
   useEffect(() => {
-    fetch("https://memory-game-backend-4.onrender.com/scores")
+    fetch("https://memory-game-backend-4.onrender.com")
       .then((res) => res.json())
       .then((data) => {
         const sorted = data.sort((a, b) => a.moves - b.moves);
