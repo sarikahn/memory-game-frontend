@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
 const EMOJIS = {
@@ -56,7 +56,7 @@ export default function Home() {
     setFlipped(newFlipped);
 
     if (newFlipped.length === 2) {
-      setMoves(moves + 1);
+      setMoves(prev => prev + 1);
       const [first, second] = newFlipped.map(i => cards[i].val);
       if (first === second) {
         setMatched([...matched, ...newFlipped]);
@@ -80,11 +80,22 @@ export default function Home() {
 
   const saveScore = async () => {
     try {
-      await fetch("https://memory-game-backend-4.onrender.com)", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name || "Player", moves, time, difficulty: "Fixed", category: "Sports" })
-      });
+      const response = await fetch(
+        "https://memory-game-backend-4.onrender.com/scores",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name || "Player",
+            moves,
+            time,
+            difficulty: "easy",
+            category: "Sports"
+          })
+        }
+      );
+      const data = await response.json();
+      console.log("Score saved:", data);
     } catch (err) {
       console.error("Error saving score:", err);
     }
@@ -140,11 +151,9 @@ export default function Home() {
               className={`absolute inset-0 rounded-2xl shadow-lg transition-transform duration-500 transform ${flipped.includes(index) || matched.includes(index) ? "rotate-y-180" : ""}`}
               style={{ transformStyle: "preserve-3d" }}
             >
-              {/* Front */}
               <div className="absolute inset-0 bg-white rounded-2xl flex items-center justify-center text-3xl sm:text-4xl md:text-5xl backface-hidden cursor-pointer">
                 ❓
               </div>
-              {/* Back */}
               <div
                 className="absolute inset-0 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl md:text-5xl backface-hidden"
                 style={{ backgroundColor: card.color, transform: "rotateY(180deg)" }}
@@ -173,3 +182,4 @@ export default function Home() {
     </div>
   );
 }
+
